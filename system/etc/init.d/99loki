@@ -1,0 +1,174 @@
+#!/system/bin/sh
+
+su
+
+# Set Permissions
+busybox mount -o remount,rw -t auto /system;
+busybox chmod -R 777 /system/etc/init.d;
+
+#CPU
+echo applied > /data/local/cpu_protection
+chmod 777 /data/local/cpu_protection
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "hotplug" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "1300000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "598000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+chmod 666 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "hotplug" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+chmod 666 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+echo "1300000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+chmod 666 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "598000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+
+echo 30 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_down_avg_times
+echo 3 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_down_differential
+echo 0 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_hotplug_disable
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
+echo 2 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_limit
+echo 5 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_up_avg_times
+echo 98 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_up_threshold
+echo 5 > /sys/devices/system/cpu/cpufreq/hotplug/down_differential
+echo 0 > /sys/devices/system/cpu/cpufreq/hotplug/ignore_nice_load
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/io_is_busy
+echo 99 > /sys/devices/system/cpu/cpufreq/hotplug/od_threshold
+echo 150 > /sys/devices/system/cpu/cpufreq/hotplug/powersave_bias
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_down_factor
+echo 30000 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_rate
+echo 30000 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_rate_min
+echo 30 > /sys/devices/system/cpu/cpufreq/hotplug/thermal_dispatch_avg_times
+echo 98 > /sys/devices/system/cpu/cpufreq/hotplug/up_threshold
+echo 30 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_down_avg_times
+echo 3 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_down_differential
+echo 0 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_hotplug_disable
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
+echo 2 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_limit
+echo 5 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_up_avg_times
+echo 98 > /sys/devices/system/cpu/cpufreq/hotplug/cpu_up_threshold
+echo 5 > /sys/devices/system/cpu/cpufreq/hotplug/down_differential
+echo 0 > /sys/devices/system/cpu/cpufreq/hotplug/ignore_nice_load
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/io_is_busy
+echo 99 > /sys/devices/system/cpu/cpufreq/hotplug/od_threshold
+echo 150 > /sys/devices/system/cpu/cpufreq/hotplug/powersave_bias
+echo 1 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_down_factor
+echo 30000 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_rate
+echo 30000 > /sys/devices/system/cpu/cpufreq/hotplug/sampling_rate_min
+echo 30 > /sys/devices/system/cpu/cpufreq/hotplug/thermal_dispatch_avg_times
+echo 98 > /sys/devices/system/cpu/cpufreq/hotplug/up_threshold
+
+
+# File System Trim
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.at.free/arm/fstrim -v /system
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.at.free/arm/fstrim -v /data
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.at.free/arm/fstrim -v /cache
+
+# I/O Scheduler
+chmod 666 /sys/block/mmcblk0/queue/scheduler
+echo "deadline" > /sys/block/mmcblk0/queue/scheduler
+chmod 666 /sys/block/mmcblk1/queue/scheduler
+echo "deadline" > /sys/block/mmcblk1/queue/scheduler
+
+# OOM
+chmod 666 /sys/module/lowmemorykiller/parameters/minfree
+echo "2048,4096,8192,16384,24576,32768" > /sys/module/lowmemorykiller/parameters/minfree
+
+# SD Cache
+chmod 666 /sys/block/mmcblk0/queue/read_ahead_kb
+echo "3072" > /sys/block/mmcblk0/queue/read_ahead_kb
+chmod 666 /sys/block/mmcblk1/queue/read_ahead_kb
+echo "3072" > /sys/block/mmcblk1/queue/read_ahead_kb
+chmod 666 /sys/devices/virtual/bdi/179:0/read_ahead_kb
+echo "3072" > /sys/devices/virtual/bdi/179:0/read_ahead_kb
+
+# sysctl
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w fs.file-max=524288
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w fs.inotify.max_queued_events=32000
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w fs.inotify.max_user_instances=256
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w fs.inotify.max_user_watches=10240
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w fs.lease-break-time=10
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.msgmax=65536
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.msgmni=2048
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.panic=10
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.random.read_wakeup_threshold=128
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.random.write_wakeup_threshold=256
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.sem='500 512000 64 2048'
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.shmmax=268435456
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w kernel.threads-max=524288
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w net.core.rmem_max=524288
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w net.core.wmem_max=524288
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w net.ipv4.tcp_rmem='6144 87380 524288'
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w net.ipv4.tcp_tw_recycle=1
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w net.ipv4.tcp_wmem='6144 87380 524288'
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.dirty_background_ratio=70
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.dirty_expire_centisecs=250
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.dirty_ratio=90
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.drop_caches=3
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.min_free_kbytes=4096
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.pmw/sysctl -w vm.vfs_cache_pressure=10
+
+# TCP Congestion
+busybox /data/data/ccc71.at.free/arm/sysctl -w kernel.random.write_wakeup_threshold=512/data/data/ccc71.at.free/arm/sysctl -w net.ipv4.tcp_congestion_control=reno
+
+# IPV4 tweaks
+echo "0" > /proc/sys/net/ipv4/tcp_timestamps
+echo "1" > /proc/sys/net/ipv4/tcp_tw_reuse
+echo "1" > /proc/sys/net/ipv4/tcp_sack
+echo "1" > /proc/sys/net/ipv4/tcp_tw_recycle
+echo "1" > /proc/sys/net/ipv4/tcp_window_scaling
+echo "5" > /proc/sys/net/ipv4/tcp_keepalive_probes
+echo "30" > /proc/sys/net/ipv4/tcp_keepalive_intvl
+echo "30" > /proc/sys/net/ipv4/tcp_fin_timeout
+echo "404480" > /proc/sys/net/core/wmem_max
+echo "404480" > /proc/sys/net/core/rmem_max
+echo "256960" > /proc/sys/net/core/rmem_default
+echo "256960" > /proc/sys/net/core/wmem_default
+echo "4096,16384,404480" > /proc/sys/net/ipv4/tcp_wmem
+echo "4096,87380,404480" > /proc/sys/net/ipv4/tcp_rmem
+
+# Dalvik VM tweaks
+echo "4096" > /proc/sys/vm/min_free_kbytes
+echo "0" > /proc/sys/vm/oom_kill_allocating_task
+echo "0" > /proc/sys/vm/panic_on_oom
+echo "0" > /proc/sys/vm/laptop_mode
+echo "0" > /proc/sys/vm/swappiness
+echo "20" > /proc/sys/vm/vfs_cache_pressure
+echo "95" > /proc/sys/vm/dirty_ratio
+echo "60" > /proc/sys/vm/dirty_background_ratio
+
+# MISC Kernel Tweaks
+echo "8" > /proc/sys/vm/page-cluster;
+echo "64000" > /proc/sys/kernel/msgmni;
+echo "64000" > /proc/sys/kernel/msgmax;
+echo "10" > /proc/sys/fs/lease-break-time;
+echo "500,512000,64,2048" > /proc/sys/kernel/sem;
+
+# EXT4 Tweaks
+tune2fs -o journal_data_writeback /block/path/to/system
+tune2fs -O ^has_journal /block/path/to/system
+tune2fs -o journal_data_writeback /block/path/to/cache
+tune2fs -O ^has_journal /block/path/to/cache
+tune2fs -o journal_data_writeback /block/path/to/data
+tune2fs -O ^has_journal /block/path/to/data
+
+# Battery tweaks
+echo "500" > /proc/sys/vm/dirty_expire_centisecs
+echo "1000" > /proc/sys/vm/dirty_writeback_centisecs
+
+# DB Defrag
+for i in \
+`find /data -iname "*.db"`
+do \
+sqlite3 $i 'VACUUM;'; 
+done
+
+#Init.d Test
+busybox mount -o remount,rw -t auto /system
+busybox mount -o remount,rw -t auto /data
+
+if [ -e /data/Test.log ]; then
+rm /data/Test.log
+fi
+
+echo  Init.d is working !!! >> /data/Test.log

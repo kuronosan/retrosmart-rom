@@ -1,0 +1,7 @@
+#!/system/bin/sh
+# Init.d support
+# Ryuinferno @ XDA 2012
+
+export PATH=/sbin:/system/sbin:/system/bin:/system/xbin
+/system/bin/logwrapper run-parts /system/etc/init.d
+
