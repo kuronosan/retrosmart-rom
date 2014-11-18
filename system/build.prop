@@ -3,11 +3,11 @@
 ro.build.id=JDQ39
 ro.build.display.id=ALPS.JB3.MP.V1.46
 ro.build.version.incremental=eng.user.0.7.1
-ro.custom.build.version=Retrosmart 20140904
+ro.custom.build.version=Retrosmart 20141117
 ro.build.version.sdk=17
 ro.build.version.codename=REL
 ro.build.version.release=4.2.2
-ro.build.date=2014-09-04 02:45PM CST
+ro.build.date=2014-11-17 00:00AM CST
 ro.build.date.utc=1402642628
 ro.build.type=user
 ro.build.user=root
